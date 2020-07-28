@@ -7,7 +7,7 @@ from auth.auth import AuthError, requires_auth, get_token_auth_header
 
 STAT_BASE = 8
 
-
+# Formats information to be more easily readable.
 def format_list(selection):
     item_list = [item.format() for item in selection]
     return item_list
