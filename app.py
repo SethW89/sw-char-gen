@@ -7,11 +7,11 @@ from auth.auth import AuthError, requires_auth, get_token_auth_header
 
 STAT_BASE = 8
 
-# Formats information to be more easily readable.
+
 def format_list(selection):
+    # Formats information to be more easily readable.
     item_list = [item.format() for item in selection]
     return item_list
-
 
 def create_app(test_config=None):
     # create and configure the app
@@ -19,12 +19,13 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
 
+    # Just tell us if we are up. All can use.
     @app.route('/')
     def welcome():
         msg = 'Welcome to CharGen!'
         return msg
 
-    # List all races
+    # List all races. All can use. 
     @app.route('/races')
     def get_races():
         race_list = []
@@ -39,6 +40,7 @@ def create_app(test_config=None):
             'race_list': race_list
         })
 
+    # List out all classes. All can use.
     @app.route('/classes')
     def get_classes():
         class_list = []
@@ -54,6 +56,7 @@ def create_app(test_config=None):
             'class_list': class_list
         })
 
+    # List out all characters. All can use.
     @app.route('/characters')
     def get_characters():
         character_list = []
@@ -69,6 +72,7 @@ def create_app(test_config=None):
             'character_list': character_list
         })
 
+    # Post a race to db. Admin only
     @app.route('/races', methods=['POST'])
     @requires_auth('post:races')
     def create_race(payload):
@@ -98,6 +102,7 @@ def create_app(test_config=None):
         except BaseException:
             abort(422)
 
+    # Post a class to db. Admin only
     @app.route('/classes', methods=['POST'])
     @requires_auth('post:classes')
     def create_class(payload):
@@ -129,6 +134,7 @@ def create_app(test_config=None):
         except BaseException:
             abort(422)
 
+    # Post a Character to db. Admin and User
     @app.route('/characters', methods=['POST'])
     @requires_auth('post:characters')
     def create_character(payload):
@@ -161,6 +167,7 @@ def create_app(test_config=None):
         except BaseException:
             abort(422)
 
+    # Delete a race from db. Admin only
     @app.route('/races/<int:race_id>', methods=['DELETE'])
     @requires_auth('delete:races')
     def delete_race(payload, race_id):
@@ -180,6 +187,7 @@ def create_app(test_config=None):
             except BaseException:
                 abort(422)
 
+    # Delete a class from db. Admin only
     @app.route('/classes/<int:class_id>', methods=['DELETE'])
     @requires_auth('delete:classes')
     def delete_class(payload, class_id):
@@ -200,6 +208,7 @@ def create_app(test_config=None):
             except BaseException:
                 abort(422)
 
+    # Delete a race from db. Admin only (for now)
     @app.route('/characters/<int:character_id>', methods=['DELETE'])
     @requires_auth('delete:characters')
     def delete_character(payload, character_id):
@@ -220,6 +229,7 @@ def create_app(test_config=None):
             except BaseException:
                 abort(422)
 
+    # Edit a race from db. Admin only
     @app.route('/races/<int:race_id>', methods=['PATCH'])
     @requires_auth('post:races')
     def update_race(payload, race_id):
@@ -253,6 +263,7 @@ def create_app(test_config=None):
             except BaseException:
                 abort(422)
 
+    # Edit a Class from db. Admin only
     @app.route('/classes/<int:class_id>', methods=['PATCH'])
     @requires_auth('post:classes')
     def update_class(payload, class_id):
@@ -288,6 +299,7 @@ def create_app(test_config=None):
             except BaseException:
                 abort(422)
 
+    # Delete a Character from db. Admin only (for now)
     @app.route('/characters/<int:character_id>', methods=['PATCH'])
     @requires_auth('post:characters')
     def update_character(payload, character_id):
@@ -325,6 +337,7 @@ def create_app(test_config=None):
             except BaseException:
                 abort(422)
 
+    # Here be error handlers. 
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
@@ -369,6 +382,7 @@ def create_app(test_config=None):
 
 
 APP = create_app()
+
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
